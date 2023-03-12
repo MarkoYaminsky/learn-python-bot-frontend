@@ -1,3 +1,5 @@
+import datetime
+
 from telebot import types
 
 from settings.bot import bot
@@ -44,10 +46,14 @@ def homework_command(message: types.Message):
     for index, homework in enumerate(list_of_homework, 1):
         task = homework['task']
         topic = homework['topic']
-        resulting_text += f'Завдання {index} — {topic}.\n{task}\n\n'
+        deadline = datetime.datetime.strptime(homework['deadline'], '%Y-%m-%d').strftime('%d.%m.%Y')
+        resulting_text += f'Завдання {index} — {topic}.\nЗдати до {deadline} включно.\n\n\n{task}\n\n'
     if list_of_homework:
+        last_task = list_of_homework[-1]['task']
+        last_row_content = last_task.split('\n')[-1].strip()
+        horizontal_indent = '\n' * (2 if last_row_content == '"""' else 3)
         bot.send_message(chat_id, resulting_text.strip()
-                         + f"\n\nЩоб подати домашнє завдання, використайте /submit_homework")
+                         + f"{horizontal_indent}Щоб подати домашнє завдання, використайте /submit_homework")
     else:
         bot.send_message(chat_id, 'Вітаю! У Вас немає домашнього завдання. Ви молодець!')
 
