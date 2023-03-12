@@ -32,7 +32,7 @@ def my_group_command(message: types.Message):
         return
     students = [student['username'] for student in get_students_by_group_name(group_name)]
     for index, student in enumerate(students, 1):
-        resulting_text += f'{index}. {student}\n'
+        resulting_text += f'{index}. @{student}\n'
     bot.send_message(student_id, resulting_text.strip())
 
 
@@ -96,7 +96,7 @@ def students_with_undone_homework_command(message: types.Message):
     if not students_and_homework:
         bot.send_message(this_chat, 'Всі студенти зробили своє домашнє завдання.')
     for student_index, (username, tasks) in enumerate(grouped_tasks.items(), 1):
-        resulting_text += f'Студент {student_index}:\n{username}\n\nДомашнє завдання:\n'
+        resulting_text += f'Студент {student_index}:\n@{username}\n\nДомашнє завдання:\n'
         for task_index, task in enumerate(tasks, 1):
             resulting_text += f'{student_index}.{task_index}) {task}\n'
         resulting_text += '⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n'
