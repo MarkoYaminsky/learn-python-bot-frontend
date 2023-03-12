@@ -76,8 +76,11 @@ def submit_homework_command(message: types.Message):
             bot.send_message(student_id, submission_status)
             return
         username = get_student_username(student_id=student_id)
-        bot.send_message(MY_USER_ID,
-                         f'Користувач {username} подав домашнє завдання на розгляд.')
+        bot.send_message(
+            MY_USER_ID,
+            f'Користувач {username} подав домашнє завдання на розгляд.'
+            f'\n\nДля перегляду зробленого д/з використайте /submitted_homework.'
+        )
         bot.send_message(student_id, f'Домашнє завдання успішно подане на розгляд.')
 
     student_id = message.chat.id
@@ -131,7 +134,7 @@ def create_group_command(message: types.Message):
 @bot_command
 def add_user_to_group_command(message: types.Message):
     def get_user_name(user_message: types.Message, group_name):
-        user_username = user_message.text.lstrip('@')
+        user_username = user_message.text
         addition_status = add_student_to_group(student_name=user_username, group_name=group_name)
         if addition_status != 'success':
             bot.send_message(telegram_id, addition_status)
