@@ -3,13 +3,13 @@ import datetime
 from telebot import types
 
 from settings.bot import bot
-from settings.config import ADMINS, MY_USER_ID
+from settings.config import ADMINS
 from handlers.utils import replace_special_characters, group_tasks_by_username
 from utils.api.requests_senders.groups import create_group, add_student_to_group, group_exists
-from utils.api.requests_senders.homework import get_homework, submit_homework, add_homework, get_submitted_homework, \
-    homework_exists, get_topics
+from utils.api.requests_senders.homework import get_homework, add_homework, get_submitted_homework, \
+    get_topics
 from utils.api.requests_senders.students import get_students_with_undone_homework, get_students_by_group_name, \
-    get_student_group, get_student_id, get_student_username
+    get_student_group, get_student_id
 from utils.decorators import bot_command, admin
 from settings.commands import general_commands, admin_commands
 
@@ -61,31 +61,19 @@ def homework_command(message: types.Message):
 @bot.message_handler(commands=['submit_homework'])
 @bot_command
 def submit_homework_command(message: types.Message):
-    def get_topic(topic_message: types.Message):
-        topic = topic_message.text.rstrip('.')
-        if not homework_exists(topic):
-            bot.send_message(student_id, f'Домашнього завдання з темою "{topic}" не існує.')
-            return
-        sent_content = bot.send_message(student_id, 'Введіть зроблене завдання.')
-        bot.register_next_step_handler(sent_content, get_content, topic)
-
-    def get_content(message_content: types.Message, topic: str):
-        content = replace_special_characters(message_content.text)
-        submission_status = submit_homework(student_id=student_id, topic=topic, content=content)
-        if submission_status != 'success':
-            bot.send_message(student_id, submission_status)
-            return
-        username = get_student_username(student_id=student_id)
-        bot.send_message(
-            MY_USER_ID,
-            f'Користувач {username} подав домашнє завдання на розгляд.'
-            f'\n\nДля перегляду зробленого д/з використайте /submitted_homework.'
-        )
-        bot.send_message(student_id, f'Домашнє завдання успішно подане на розгляд.')
-
     student_id = message.chat.id
-    sent = bot.send_message(student_id, 'Введіть тему домашнього завдання, яке ви хочете подати на розгляд.')
-    bot.register_next_step_handler(sent, get_topic)
+    homework_len = len(homework := get_homework(student_id))
+    if homework_len == 0:
+        bot.send_message(student_id, "У вас немає незрозбленого домашнього завдання.")
+        return
+    markup = types.InlineKeyboardMarkup()
+    for homework in homework:
+        homework_option = types.InlineKeyboardButton(
+            homework["topic"],
+            callback_data=f'submit_homework {homework["id"]} {student_id}'
+        )
+        markup.row(homework_option)
+    bot.send_message(student_id, "Виберіть тему домашнього завдання.", reply_markup=markup)
 
 
 @bot.message_handler(commands=['google_disc'])
