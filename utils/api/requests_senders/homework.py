@@ -22,13 +22,16 @@ def get_homework(telegram_id: int):
         request_type=RequestType.QUERY,
         instance_name='homework',
         query_params=[QueryParameter(parameter_name='telegramId', parameter_value=telegram_id)],
-        output_fields=['topic', 'task', 'deadline']
+        output_fields=['topic', 'task', 'deadline', 'id']
     )
     data = GraphqlRequest(request).send_request()
     return [
-        {'topic': homework['topic'],
-         'task': homework['task'],
-         'deadline': homework['deadline']}
+        {
+            'topic': homework['topic'],
+            'task': homework['task'],
+            'deadline': homework['deadline'],
+            'id': homework['id']
+        }
         for homework in data
     ]
 
