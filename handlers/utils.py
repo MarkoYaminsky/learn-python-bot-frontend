@@ -61,7 +61,8 @@ def replace_special_characters(string: str):
         .replace('\n', '%%')\
         .replace('\r', '%%')\
         .replace('"', "'")\
-        .replace('    ', '\t')\
+        .replace('    ', '\t') \
+        .replace('\\', '##')\
         .strip()
 
 
