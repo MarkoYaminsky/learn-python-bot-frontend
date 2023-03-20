@@ -223,10 +223,9 @@ def homework_topics_command(message: types.Message):
 @admin
 @bot_command
 def remind_students_command(message: types.Message):
-    students_to_remind = group_tasks_by_username(get_students_with_undone_homework())
-    for student_name, homework in students_to_remind.items():
-        reminder_message = 'Нагадування!\nУ вас не зроблені такі домашні завдання:\n\n'
-        for task_index, task in enumerate(homework, 1):
-            reminder_message += f'{task_index}) {task}\n'
-        reminder_message += '\nЩоб побачити деталі, введіть /homework.'
-        bot.send_message(get_student_id(student_name), reminder_message)
+    self_id = message.chat.id
+    markup = types.InlineKeyboardMarkup()
+    group_option = types.InlineKeyboardButton('Групі', callback_data=f'remind_group_{self_id}')
+    personal_option = types.InlineKeyboardButton('Всім', callback_data=f'remind_everybody_{self_id}')
+    markup.row(group_option, personal_option)
+    bot.send_message(self_id, "Кому Ви хочете призначити домашнє завдання?", reply_markup=markup)
