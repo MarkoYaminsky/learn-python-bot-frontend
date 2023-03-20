@@ -1,10 +1,10 @@
 from telebot import types
 
+from handlers.utils import assignment_with_option, replace_special_characters, group_tasks_by_username, remind_by_option
 from settings.bot import bot
-from handlers.utils import assignment_with_option, replace_special_characters
 from settings.config import MY_USER_ID
 from utils.api.requests_senders.homework import approve_or_decline_homework, get_topic, submit_homework
-from utils.api.requests_senders.students import get_student_username
+from utils.api.requests_senders.students import get_student_username, get_student_id
 
 
 @bot.callback_query_handler(lambda query: query.data in ['assign_to_group', 'assign_to_student'])
@@ -51,3 +51,18 @@ def submit_homework_callback(query: types.CallbackQuery):
     topic = get_topic(homework_id)
     sent_content = bot.send_message(student_id, 'Введіть зроблене завдання.')
     bot.register_next_step_handler(sent_content, get_content)
+
+
+@bot.callback_query_handler(lambda query: query.data.startswith('remind'))
+def remind_students_callback(query: types.CallbackQuery):
+    _, option, self_id = query.data.split('_')
+    reminder_set = remind_by_option(option=option, self_id=self_id)
+    students_to_remind = group_tasks_by_username(reminder_set)
+
+    for student_name, homework in students_to_remind.items():
+        reminder_message = 'Нагадування!\nУ вас не зроблені такі домашні завдання:\n\n'
+        for task_index, task in enumerate(homework, 1):
+            reminder_message += f'{task_index}) {task}\n'
+        reminder_message += '\nЩоб побачити деталі, введіть /homework.'
+        bot.send_message(get_student_id(student_name), reminder_message)
+        bot.send_message(self_id, 'Нагадування успішно відправлено.')

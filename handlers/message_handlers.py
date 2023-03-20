@@ -87,11 +87,11 @@ def google_disc_command(message: types.Message):
 @bot_command
 def students_with_undone_homework_command(message: types.Message):
     resulting_text = ''
-    students_and_homework = get_students_with_undone_homework()
-    grouped_tasks = group_tasks_by_username(students_and_homework)
     this_chat = message.chat.id
+    students_and_homework = get_students_with_undone_homework()
     if not students_and_homework:
         bot.send_message(this_chat, 'Всі студенти зробили своє домашнє завдання.')
+    grouped_tasks = group_tasks_by_username(students_and_homework)
     for student_index, (username, tasks) in enumerate(grouped_tasks.items(), 1):
         resulting_text += f'Студент {student_index}:\n@{username}\n\nДомашнє завдання:\n'
         for task_index, task in enumerate(tasks, 1):
@@ -201,7 +201,7 @@ def submitted_homework_command(message: types.Message):
 
         bot.send_message(
             message.chat.id,
-            f'Студент: {student_name}\n\n'
+            f'Студент: @{student_name}\n\n'
             f'Завдання:\n{task}\n\n'
             f'Розв\'язок:\n{content}',
             reply_markup=markup
@@ -217,3 +217,15 @@ def homework_topics_command(message: types.Message):
     for index, topic in enumerate(topics, 1):
         resuting_message += f'{index}. {topic}\n'
     bot.send_message(message.chat.id, resuting_message.strip())
+
+
+@bot.message_handler(commands=['remind_students'])
+@admin
+@bot_command
+def remind_students_command(message: types.Message):
+    self_id = message.chat.id
+    markup = types.InlineKeyboardMarkup()
+    group_option = types.InlineKeyboardButton('Групі', callback_data=f'remind_group_{self_id}')
+    personal_option = types.InlineKeyboardButton('Всім', callback_data=f'remind_everybody_{self_id}')
+    markup.row(group_option, personal_option)
+    bot.send_message(self_id, "Кому Ви хочете призначити домашнє завдання?", reply_markup=markup)

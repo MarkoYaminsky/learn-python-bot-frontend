@@ -18,5 +18,5 @@ admin_commands.extend([
     BotCommand(command="assign_homework", description="Призначити домашнє завдання студентові або групі студентів"),
     BotCommand(command="submitted_homework", description="Перевірити завдання, які подалися на розгляд"),
     BotCommand(command="homework_topics", description="Отримати список тем, з яких було домашнє завдання"),
-    BotCommand(command="send_message_from_bot", description="Надіслати повідомлення через бота"),
+    BotCommand(command="remind_students", description="Нагадати студентам про виконання домашнього завдання")
 ])

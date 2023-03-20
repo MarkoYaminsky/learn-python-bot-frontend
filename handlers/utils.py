@@ -1,9 +1,12 @@
+import time
+
 from telebot import types
 
 from settings.bot import bot
-from utils.api.requests_senders.groups import group_exists
+from utils.api.requests_senders.groups import group_exists, get_undone_homework_by_group
 from utils.api.requests_senders.homework import assign_homework
-from utils.api.requests_senders.students import get_student_id, get_students_by_group_name
+from utils.api.requests_senders.students import get_student_id, get_students_by_group_name, \
+    get_students_with_undone_homework
 
 
 def assignment_with_option(option: str, from_user_id: int):
@@ -14,7 +17,7 @@ def assignment_with_option(option: str, from_user_id: int):
         if option == 'group' and not group_exists(
                 user_or_group
         ) or option == 'student' and not get_student_id(
-                user_or_group
+            user_or_group
         ):
             bot.send_message(from_user_id, f'{option_form} з назвою {user_or_group} не існує.')
             return
@@ -30,7 +33,7 @@ def assignment_with_option(option: str, from_user_id: int):
             return
 
         after_assignment_phrase = '' \
-            f'Ви отримали нове домашнє завдання з теми "{topic}". Щоб переглянути його, використайте /homework'
+                                  f'Ви отримали нове домашнє завдання з теми "{topic}". Щоб переглянути його, використайте /homework'
 
         if option == 'group':
             for student in get_students_by_group_name(user_or_group):
@@ -56,12 +59,13 @@ def assignment_with_option(option: str, from_user_id: int):
 
 
 def replace_special_characters(string: str):
-    return string\
-        .replace('\r\n', '%%')\
-        .replace('\n', '%%')\
-        .replace('\r', '%%')\
-        .replace('"', "'")\
-        .replace('    ', '\t')\
+    return string \
+        .replace('\r\n', '%%') \
+        .replace('\n', '%%') \
+        .replace('\r', '%%') \
+        .replace('"', "'") \
+        .replace('    ', '\t') \
+        .replace('\\', '##') \
         .strip()
 
 
@@ -75,3 +79,21 @@ def group_tasks_by_username(data: list[dict[str, str]]):
         else:
             items[student].append(task)
     return items
+
+
+def remind_by_option(option: str, self_id: int):
+    if option == 'group':
+        def get_group_name(group_name_message: types.Message):
+            nonlocal group_name
+            group_name = group_name_message.text
+
+        group_name: str = ''
+        sent_group_name = bot.send_message(self_id, "Введіть назву групи.")
+        bot.register_next_step_handler(sent_group_name, get_group_name)
+
+        while not group_name:
+            time.sleep(0.1)
+        return get_undone_homework_by_group(group_name)
+
+    elif option == 'everybody':
+        return get_students_with_undone_homework()
