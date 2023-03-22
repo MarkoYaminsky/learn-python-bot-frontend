@@ -4,5 +4,5 @@ import handlers.message_handlers
 import handlers.start_handler
 import handlers.callback_handlers
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     bot.infinity_polling()

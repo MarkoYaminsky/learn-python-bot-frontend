@@ -4,4 +4,4 @@ class OutputField:
         self.nested_fields = nested_fields
 
     def __str__(self):
-        return '{' + f"{self.parrent_name}: {self.nested_fields}" + '}'
+        return "{" + f"{self.parrent_name}: {self.nested_fields}" + "}"

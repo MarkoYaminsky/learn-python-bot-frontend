@@ -4,4 +4,4 @@ class QueryParameter:
         self.parameter_value = parameter_value
 
     def __str__(self):
-        return '{' + f"{self.parameter_name}: {self.parameter_value}" + '}'
+        return "{" + f"{self.parameter_name}: {self.parameter_value}" + "}"
