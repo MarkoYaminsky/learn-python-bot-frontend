@@ -246,9 +246,10 @@ def submitted_homework_command(message: types.Message):
         bot.send_message(
             message.chat.id,
             f"Студент: @{student_name}\n\n"
-            f"Завдання:\n{task}\n\n"
-            f"Розв'язок:\n{content}",
+            f"<b>Завдання</b>:\n{task}\n\n"
+            f"<b>Розв'язок</b>:\n{content}",
             reply_markup=markup,
+            parse_mode='html',
         )
 
 
