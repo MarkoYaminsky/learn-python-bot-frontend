@@ -233,21 +233,15 @@ def submitted_homework_command(message: types.Message):
         )
         return
     for item in homework_data:
-        content = item["content"]
         student = item["student"]
         homework = item["homework"]
 
-        student_id = student["telegramId"]
-        student_name = student["username"]
-        homework_id = homework["id"]
-        task = homework["task"]
-
-        markup = submitted_homework_keyboard(student_id, homework_id)
+        markup = submitted_homework_keyboard(student_id=student["telegramId"], homework_id=homework["id"])
         bot.send_message(
             message.chat.id,
-            f"Студент: @{student_name}\n\n"
-            f"<b>Завдання</b>:\n{task}\n\n"
-            f"<b>Розв'язок</b>:\n{content}",
+            f"Студент: @{student['username']}\n\n"
+            f"<b>Завдання</b>:\n{homework['task']}\n\n"
+            f"<b>Розв'язок</b>:\n{item['content']}",
             reply_markup=markup,
             parse_mode='html',
         )
