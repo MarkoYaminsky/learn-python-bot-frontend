@@ -7,6 +7,7 @@ from handlers.keyboards import (
     submitted_homework_keyboard,
     submit_homework_keyboard,
     remind_students_keyboard,
+    homework_keyboard,
 )
 from handlers.utils import replace_special_characters, group_tasks_by_username
 from settings.bot import bot
@@ -63,30 +64,28 @@ def my_group_command(message: types.Message):
 @bot.message_handler(commands=["homework"])
 @bot_command
 def homework_command(message: types.Message):
-    resulting_text = ""
     chat_id = message.chat.id
     list_of_homework = get_homework(chat_id)
-    for index, homework in enumerate(list_of_homework, 1):
+
+    if not list_of_homework:
+        bot.send_message(
+            chat_id, "Вітаю! У Вас немає домашнього завдання. Ви молодець!"
+        )
+        return
+
+    for homework in list_of_homework:
+        homework_id = homework["id"]
         task = homework["task"]
         topic = homework["topic"]
         deadline = datetime.datetime.strptime(
             homework["deadline"], "%Y-%m-%d"
         ).strftime("%d.%m.%Y")
-        resulting_text += (
-            f"Завдання {index} — {topic}.\nЗдати до {deadline} включно.\n\n\n{task}\n\n"
-        )
-    if list_of_homework:
-        last_task = list_of_homework[-1]["task"]
-        last_row_content = last_task.split("\n")[-1].strip()
-        horizontal_indent = "\n" * (2 if last_row_content == '"""' else 3)
+        markup = homework_keyboard(homework_id=homework_id, student_id=chat_id)
         bot.send_message(
             chat_id,
-            resulting_text.strip()
-            + f"{horizontal_indent}Щоб подати домашнє завдання, використайте /submit_homework",
-        )
-    else:
-        bot.send_message(
-            chat_id, "Вітаю! У Вас немає домашнього завдання. Ви молодець!"
+            f"<b>{topic}</b>.\n<i>Речинець: {deadline}</i>\n\n\n{task}\n\n",
+            parse_mode="html",
+            reply_markup=markup,
         )
 
 

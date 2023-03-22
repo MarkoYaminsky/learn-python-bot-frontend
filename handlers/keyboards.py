@@ -46,3 +46,13 @@ def remind_students_keyboard(self_id: int):
     )
     markup.row(group_option, personal_option)
     return markup
+
+
+def homework_keyboard(homework_id: int, student_id: int):
+    markup = types.InlineKeyboardMarkup()
+    submit_homework_button = types.InlineKeyboardButton(
+        "Подати завдання на розгляд",
+        callback_data=f"submit_homework {homework_id} {student_id}",
+    )
+    markup.row(submit_homework_button)
+    return markup
