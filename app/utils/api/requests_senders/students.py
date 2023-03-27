@@ -1,10 +1,10 @@
 import pandas as pd
 
-from utils.api.request_classes.output_field import OutputField
-from utils.api.request_classes.query_parameter import QueryParameter
-from utils.api.request_classes.request_type import RequestType
-from utils.api.request_classes.graphql_request import GraphqlRequest
-from utils.decorators import logged
+from app.utils.api.request_classes.output_field import OutputField
+from app.utils.api.request_classes.query_parameter import QueryParameter
+from app.utils.api.request_classes.request_type import RequestType
+from app.utils.api.request_classes.graphql_request import GraphqlRequest
+from app.utils.decorators import logged
 
 
 def get_students_by_group_name(group_name: str):

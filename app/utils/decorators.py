@@ -2,14 +2,14 @@ import datetime
 
 from telebot import types
 
-from settings import commands
-from settings.bot import bot
-from settings.config import ADMINS
+from app.settings import commands
+from app.settings.bot import bot
+from app.settings.config import ADMINS
 
 
 def logged(function):
     def wrapper(*args, **kwargs):
-        with open("logs", "a") as file:
+        with open("app/logs", "a") as file:
             username = kwargs.get("username", None)
             time_now = datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")
             file.write(
@@ -32,8 +32,8 @@ def admin(function):
 
 
 def bot_command(function):
-    from utils.api.requests_senders.students import update_student
-    from utils.api.requests_senders.students import get_student_username
+    from app.utils.api.requests_senders.students import update_student
+    from app.utils.api.requests_senders.students import get_student_username
 
     def wrapper(message: types.Message):
         bot.set_my_commands(commands.general_commands)

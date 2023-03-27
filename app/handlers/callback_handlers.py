@@ -1,19 +1,19 @@
 from telebot import types
 
-from handlers.utils import (
+from app.handlers.utils import (
     assignment_with_option,
     replace_special_characters,
     group_tasks_by_username,
     remind_by_option,
 )
-from settings.bot import bot
-from settings.config import MY_USER_ID
-from utils.api.requests_senders.homework import (
+from app.settings.bot import bot
+from app.settings.config import MY_USER_ID
+from app.utils.api.requests_senders.homework import (
     approve_or_decline_homework,
     get_topic,
     submit_homework,
 )
-from utils.api.requests_senders.students import get_student_username, get_student_id
+from app.utils.api.requests_senders.students import get_student_username, get_student_id
 
 
 @bot.callback_query_handler(

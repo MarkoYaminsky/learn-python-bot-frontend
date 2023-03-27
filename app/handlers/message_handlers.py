@@ -2,35 +2,35 @@ import datetime
 
 from telebot import types
 
-from handlers.keyboards import (
+from app.handlers.keyboards import (
     assign_homework_keyboard,
     submitted_homework_keyboard,
     submit_homework_keyboard,
     remind_students_keyboard,
     homework_keyboard,
 )
-from handlers.utils import replace_special_characters, group_tasks_by_username
-from settings.bot import bot
-from settings.commands import get_commands
-from settings.config import GOOGLE_DISC
-from utils.api.requests_senders.groups import (
+from app.handlers.utils import replace_special_characters, group_tasks_by_username
+from app.settings.bot import bot
+from app.settings.commands import get_commands
+from app.settings.config import GOOGLE_DISC
+from app.utils.api.requests_senders.groups import (
     create_group,
     add_student_to_group,
     group_exists,
 )
-from utils.api.requests_senders.homework import (
+from app.utils.api.requests_senders.homework import (
     get_homework,
     add_homework,
     get_submitted_homework,
     get_topics,
 )
-from utils.api.requests_senders.students import (
+from app.utils.api.requests_senders.students import (
     get_students_with_undone_homework,
     get_students_by_group_name,
     get_student_group,
     get_student_id,
 )
-from utils.decorators import bot_command, admin
+from app.utils.decorators import bot_command, admin
 
 
 @bot.message_handler(commands=["help"])
@@ -232,6 +232,7 @@ def submitted_homework_command(message: types.Message):
             message.chat.id, "На зараз ніхто не подав домашнє завдання на розгляд."
         )
         return
+
     for item in homework_data:
         student = item["student"]
         homework = item["homework"]

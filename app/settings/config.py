@@ -10,8 +10,6 @@ API_KEY = getenv("API_KEY")
 
 ADMINS = list(map(int, [MY_USER_ID]))
 
-SERVER_URL = "http://localhost:8000/graphql/"
+SERVER_URL = getenv("SERVER_URL")
 
-GOOGLE_DISC = (
-    "https://drive.google.com/drive/u/1/folders/1IIKI_kZuBojV07yav6PFNvrS9zEJY-lr"
-)
+GOOGLE_DISC = getenv("GOOGLE_DISC")

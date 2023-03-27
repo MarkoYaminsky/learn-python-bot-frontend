@@ -1,9 +1,9 @@
 import requests
 
-from settings.config import SERVER_URL
-from utils.api.request_classes.output_field import OutputField
-from utils.api.request_classes.query_parameter import QueryParameter
-from utils.api.request_classes.request_type import RequestType
+from app.settings.config import SERVER_URL
+from app.utils.api.request_classes.output_field import OutputField
+from app.utils.api.request_classes.query_parameter import QueryParameter
+from app.utils.api.request_classes.request_type import RequestType
 
 
 class GraphqlRequest:

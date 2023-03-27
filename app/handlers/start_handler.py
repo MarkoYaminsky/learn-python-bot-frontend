@@ -1,9 +1,9 @@
 import time
 
 from telebot import types
-from settings.bot import bot
-from utils.api.requests_senders.students import register_student, get_student_username
-from utils.decorators import bot_command
+from app.settings.bot import bot
+from app.utils.api.requests_senders.students import register_student, get_student_username
+from app.utils.decorators import bot_command
 
 
 @bot.message_handler(commands=["start"])

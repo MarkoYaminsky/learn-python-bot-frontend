@@ -2,10 +2,10 @@ import time
 
 from telebot import types
 
-from settings.bot import bot
-from utils.api.requests_senders.groups import group_exists, get_undone_homework_by_group
-from utils.api.requests_senders.homework import assign_homework
-from utils.api.requests_senders.students import (
+from app.settings.bot import bot
+from app.utils.api.requests_senders.groups import group_exists, get_undone_homework_by_group
+from app.utils.api.requests_senders.homework import assign_homework
+from app.utils.api.requests_senders.students import (
     get_student_id,
     get_students_by_group_name,
     get_students_with_undone_homework,

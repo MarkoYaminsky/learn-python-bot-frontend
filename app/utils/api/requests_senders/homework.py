@@ -1,9 +1,9 @@
 import pandas as pd
 
-from utils.api.request_classes.output_field import OutputField
-from utils.api.request_classes.query_parameter import QueryParameter
-from utils.api.request_classes.request_type import RequestType
-from utils.api.request_classes.graphql_request import GraphqlRequest
+from app.utils.api.request_classes.output_field import OutputField
+from app.utils.api.request_classes.query_parameter import QueryParameter
+from app.utils.api.request_classes.request_type import RequestType
+from app.utils.api.request_classes.graphql_request import GraphqlRequest
 
 
 def homework_exists(topic: str):

@@ -1,6 +1,6 @@
 from telebot.types import BotCommand
 
-from settings.config import ADMINS
+from app.settings.config import ADMINS
 
 general_commands = [
     BotCommand(command="start", description="Розпочати роботу з ботом"),
